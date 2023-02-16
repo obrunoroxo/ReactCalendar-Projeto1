@@ -1,0 +1,11 @@
+.App {
+  margin: auto;
+  padding: auto;
+  /* text-align: center; */
+}
+
+.date-picker {
+  margin: 10px auto auto auto;
+  max-width: 700px;
+  max-height: 700px;
+}
