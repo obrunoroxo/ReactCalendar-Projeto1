@@ -11,17 +11,23 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import Switch from '@mui/material/Switch';
+import Modal from '@mui/material/Modal';
 // import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Agenda', 'Quadras', 'Marcar horário'];
-const settings = ['Profile', 'Logout'];
+// eslint-disable-next-line
+import gitHubUser from './loginReq';
 
+
+const pages = ['Agenda', 'Quadras', 'Marcar horário'];
+const settings = ['Login', 'Logout'];
 
 
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  console.log(anchorElUser)
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -43,15 +49,15 @@ function ResponsiveAppBar() {
   function renderMenuItem(page) {
     const scheduleClick = () => {
       alert('Gostaria de ver sua agenda?')
-    }
+    };
 
     const courtClick = () => {
       alert('Qual quadra é de sua preferência?')
-    }
+    };
 
     const hourClick = () => {
       alert('Faça sua escolha!')
-    }
+    };
 
     if (page === 'Agenda') {
       return (
@@ -65,15 +71,73 @@ function ResponsiveAppBar() {
           <Typography textAlign="center">{page}</Typography>
         </MenuItem>
       )
-    } else if (page === 'Marcar horário'){
+    } else if (page === 'Marcar horário') {
       return (
         <MenuItem key={page} onClick={hourClick}>
           <Typography textAlign="center">{page}</Typography>
         </MenuItem>
       );
-    }
+    };
+  };
 
 
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+ 
+  console.log(anchorElUser)
+  if (open !== false) {
+    const style = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 400,
+      bgcolor: 'background.paper',
+      border: '2px solid #000',
+      boxShadow: 24,
+      p: 4,
+    };
+
+    return (
+      <div>
+        <Modal
+          open={open}
+          // onClick={handleOpenUserMenu}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Text in a modal
+            </Typography>
+          </Box>
+        </Modal>
+      </div>
+    );
+  };
+
+  // console.log(anchorElUser)
+
+  function renderLoginItem(setting) {
+    const logoutClick = () => {
+      alert('Fazendo logout...')
+    };
+
+    if (setting === 'Login') {
+      return (
+        <MenuItem key={setting} >
+          <Typography textAlign="center" onClick={handleOpen}>{setting}</Typography>
+        </MenuItem>
+      )
+    } else if (setting === 'Logout') {
+      return (
+        <MenuItem key={setting} onClick={logoutClick}>
+          <Typography textAlign="center">{setting}</Typography>
+        </MenuItem>
+      )
+    };
   };
 
 
@@ -163,6 +227,18 @@ function ResponsiveAppBar() {
             ))}
           </Box>
 
+          <Box
+            sx={{
+              display: { xs: 'flex', marginRight: '10px' },
+            }}
+          >
+            <Switch
+              // checked={checked}
+              // onChange={handleChange}
+              size="medium"
+              inputProps={{ 'aria-label': 'controlled' }}
+            />
+          </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -170,7 +246,7 @@ function ResponsiveAppBar() {
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: '45px' , display: 'flex'}}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -185,17 +261,12 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))
-              }
+              {settings.map((setting) => renderLoginItem(setting))}
             </Menu>
           </Box>
         </Toolbar>
       </Container>
-    </AppBar>
+    </AppBar >
   );
 }
 export default ResponsiveAppBar;
