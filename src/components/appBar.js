@@ -11,23 +11,26 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import Switch from '@mui/material/Switch';
 import Modal from '@mui/material/Modal';
 // import AdbIcon from '@mui/icons-material/Adb';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 // eslint-disable-next-line
 import gitHubUser from './loginReq';
-
+import { ColorModeContext } from './context/checkContext';
+import { useTheme } from '@mui/material/styles';
 
 const pages = ['Agenda', 'Quadras', 'Marcar horário'];
 const settings = ['Login', 'Logout'];
 
 
-
 function ResponsiveAppBar() {
+  const theme = useTheme();
+  const colorMode = React.useContext(ColorModeContext);
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  console.log(anchorElUser)
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -48,7 +51,7 @@ function ResponsiveAppBar() {
 
   function renderMenuItem(page) {
     const scheduleClick = () => {
-      alert('Gostaria de ver sua agenda?')
+      window.alert('Gostaria de ver sua agenda?')
     };
 
     const courtClick = () => {
@@ -84,8 +87,8 @@ function ResponsiveAppBar() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
- 
-  console.log(anchorElUser)
+
+  // console.log(anchorElUser)
   if (open !== false) {
     const style = {
       position: 'absolute',
@@ -103,7 +106,7 @@ function ResponsiveAppBar() {
       <div>
         <Modal
           open={open}
-          // onClick={handleOpenUserMenu}
+          onClick={handleOpenUserMenu}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
@@ -232,12 +235,9 @@ function ResponsiveAppBar() {
               display: { xs: 'flex', marginRight: '10px' },
             }}
           >
-            <Switch
-              // checked={checked}
-              // onChange={handleChange}
-              size="medium"
-              inputProps={{ 'aria-label': 'controlled' }}
-            />
+            <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
+              {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
@@ -246,7 +246,7 @@ function ResponsiveAppBar() {
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' , display: 'flex'}}
+              sx={{ mt: '45px', display: 'flex' }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{

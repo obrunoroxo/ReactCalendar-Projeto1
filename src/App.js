@@ -1,55 +1,51 @@
 import './App.css';
+import * as React from 'react';
 import ResponsiveAppBar from './components/appBar';
 import StaticDatePickerLandscape from './components/calendar';
 // import gitHubUser from './components/loginReq';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-
+import { ColorModeContext } from './components/context/checkContext';
+import { useState,  useMemo} from 'react';
+import { CssBaseline } from '@mui/material';
 
 function App() {
 
-  // const x = window.confirm('Voce deseja usar o dark mode?')
+  const [mode, setMode] = useState('light');
 
-  // function themeProvider(x) {
-  //   if (x !== false) {
-  //     return (
-  //       createTheme({
-  //         palette: {
-  //           mode: 'dark',
-  //         },
-  //       })
-  //     );
-  //   } else {
-  //     return (
-  //       createTheme({
-  //         palette: {
-  //           mode: 'light',
-  //         },
-  //       })
-  //     );
-  //   }
-  // };
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+      },
+    }),
+    [],
+  );
 
-  const darkTheme = createTheme({
-    palette: {
-      mode: 'dark',
-    },
-  });
-  
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+        },
+      }),
+    [mode],
+  );
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <div className="App">
-        <div className='app-bar'>
-          <ResponsiveAppBar />
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <div className="App">
+          <div className='app-bar'>
+            <ResponsiveAppBar />
+          </div>
+          <div className='date-picker'>
+            <StaticDatePickerLandscape />
+          </div>
         </div>
-        <div className='date-picker'>
-          <StaticDatePickerLandscape />
-        </div>
-      </div>
-    </ThemeProvider>
+        </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }
 
