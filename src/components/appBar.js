@@ -1,154 +1,56 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
+import Modal from '@mui/material/Modal';
+import Stack from '@mui/material/Stack';
+import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import Modal from '@mui/material/Modal';
-// import AdbIcon from '@mui/icons-material/Adb';
+import TextField from '@mui/material/TextField';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 // eslint-disable-next-line
-import gitHubUser from './loginReq';
-import { ColorModeContext } from './context/checkContext';
+import { getGitUser } from './loginReq'
 import { useTheme } from '@mui/material/styles';
+import { ColorModeContext } from './context/checkContext';
 
-const pages = ['Agenda', 'Quadras', 'Marcar horário'];
+
 const settings = ['Login', 'Logout'];
+const pages = ['Agenda', 'Quadras', 'Marcar horário'];
 
 
 function ResponsiveAppBar() {
   const theme = useTheme();
+  const [name, setName] = React.useState('');
+  const [open, setOpen] = React.useState(false);
   const colorMode = React.useContext(ColorModeContext);
-
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const [userData, setUserData] = React.useState({ username: "", link: "" });
 
 
-  function renderMenuItem(page) {
-    const scheduleClick = () => {
-      window.alert('Gostaria de ver sua agenda?')
-    };
-
-    const courtClick = () => {
-      alert('Qual quadra é de sua preferência?')
-    };
-
-    const hourClick = () => {
-      alert('Faça sua escolha!')
-    };
-
-    if (page === 'Agenda') {
-      return (
-        <MenuItem key={page} onClick={scheduleClick}>
-          <Typography textAlign="center">{page}</Typography>
-        </MenuItem>
-      )
-    } else if (page === 'Quadras') {
-      return (
-        <MenuItem key={page} onClick={courtClick}>
-          <Typography textAlign="center">{page}</Typography>
-        </MenuItem>
-      )
-    } else if (page === 'Marcar horário') {
-      return (
-        <MenuItem key={page} onClick={hourClick}>
-          <Typography textAlign="center">{page}</Typography>
-        </MenuItem>
-      );
-    };
-  };
-
-
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  // console.log(anchorElUser)
-  if (open !== false) {
-    const style = {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: 400,
-      bgcolor: 'background.paper',
-      border: '2px solid #000',
-      boxShadow: 24,
-      p: 4,
-    };
-
-    return (
-      <div>
-        <Modal
-          open={open}
-          onClick={handleOpenUserMenu}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Text in a modal
-            </Typography>
-          </Box>
-        </Modal>
-      </div>
-    );
-  };
-
-  // console.log(anchorElUser)
-
-  function renderLoginItem(setting) {
-    const logoutClick = () => {
-      alert('Fazendo logout...')
-    };
-
-    if (setting === 'Login') {
-      return (
-        <MenuItem key={setting} >
-          <Typography textAlign="center" onClick={handleOpen}>{setting}</Typography>
-        </MenuItem>
-      )
-    } else if (setting === 'Logout') {
-      return (
-        <MenuItem key={setting} onClick={logoutClick}>
-          <Typography textAlign="center">{setting}</Typography>
-        </MenuItem>
-      )
-    };
-  };
+  async function handleClick(name) {
+    const response = await getGitUser(name);
+    setUserData({ ...userData, username: response['username'], link: response['link'] })
+  }
 
 
   return (
-    <AppBar position="static" >
+    <AppBar
+      position="fixed" >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
+
+
+          {/* Menu responsive */}
           <Typography
             variant="h6"
             noWrap
@@ -156,7 +58,9 @@ function ResponsiveAppBar() {
             href="/"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
+              display: {
+                xs: 'none', md: 'flex'
+              },
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
@@ -166,14 +70,19 @@ function ResponsiveAppBar() {
           >
             Calendário
           </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{
+            flexGrow: 1,
+            display: {
+              xs: 'flex', md: 'none'
+            }
+          }}
+          >
             <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={handleOpenNavMenu}
+              onClick={(event) => { setAnchorElNav(event.currentTarget); }}
               color="inherit"
             >
               <MenuIcon />
@@ -191,20 +100,53 @@ function ResponsiveAppBar() {
                 horizontal: 'left',
               }}
               open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              onClose={() => {
+                setAnchorElNav(null);
+              }}
               sx={{
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => renderMenuItem(page))}
+              <MenuItem key={pages[0]}>
+                <Typography
+                  textAlign="center"
+                  onClick={() => {
+                    alert('Gostaria de ver sua agenda?')
+                  }}
+                >
+                  {pages[0]}
+                </Typography>
+              </MenuItem>
+              <MenuItem key={pages[1]}>
+                <Typography
+                  textAlign="center"
+                  onClick={() => {
+                    alert('Qual quadra é de sua preferência?')
+                  }}
+                >
+                  {pages[1]}
+                </Typography>
+              </MenuItem>
+              <MenuItem key={pages[2]}>
+                <Typography
+                  textAlign="center"
+                  onClick={() => {
+                    alert('Faça sua escolha!')
+                  }}
+                >
+                  {pages[2]}
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
-          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
+
+
+          {/* Menu full screen */}
           <Typography
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -218,35 +160,91 @@ function ResponsiveAppBar() {
           >
             Calendário
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-
           <Box
             sx={{
-              display: { xs: 'flex', marginRight: '10px' },
+              flexGrow: 1,
+              display: { xs: 'none', md: 'flex' }
             }}
           >
-            <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
-              {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
+            < MenuItem key={pages[0]} >
+              <Typography
+                textAlign="center"
+                onClick={() => {
+                  alert('Gostaria de ver sua agenda?')
+                }}
+              >
+                {pages[0]}
+              </Typography>
+            </MenuItem >
+            <MenuItem key={pages[1]}>
+              <Typography
+                textAlign="center"
+                onClick={() => {
+                  alert('Qual quadra é de sua preferência?')
+                }}
+              >
+                {pages[1]}
+              </Typography>
+            </MenuItem>
+            <MenuItem key={pages[2]}>
+              <Typography
+                textAlign="center"
+                onClick={() => {
+                  alert('Faça sua escolha!')
+                }}
+              >
+                {pages[2]}
+              </Typography>
+            </MenuItem>
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Bruno Rossi" src="/static/images/avatar/2.jpg" />
+
+
+          {/* Change theme button */}
+          <Box
+            sx={{
+              display: { xs: 'flex', marginRight: '20px' },
+            }}
+          >
+            <Tooltip
+              title='Change theme'
+            >
+              <IconButton
+                sx={{
+                  ml: 1
+                }}
+                onClick={colorMode.toggleColorMode}
+                color="inherit"
+              >
+                {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+              </IconButton>
+            </Tooltip>
+          </Box>
+
+
+          {/* Icon menu | Login - Logout */}
+          <Box
+            sx={{ flexGrow: 0 }}
+          >
+            <Tooltip
+              title="Open settings"
+            >
+              <IconButton
+                onClick={(event) => {
+                  setAnchorElUser(event.currentTarget);
+                }}
+                sx={{ p: 0 }}
+              >
+                <Avatar
+                  alt={userData.username}
+                  src={userData.link}
+                />
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px', display: 'flex' }}
+              sx={{
+                mt: '45px',
+                display: 'flex'
+              }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -259,10 +257,120 @@ function ResponsiveAppBar() {
                 horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+              onClose={() => {
+                setAnchorElUser(null);
+              }}
             >
-              {settings.map((setting) => renderLoginItem(setting))}
+              <MenuItem key={settings[0]}>
+                <Typography
+                  textAlign="center"
+                  onClick={
+                    () => setOpen(true)
+                  }
+                >
+                  {settings[0]}
+                </Typography>
+              </MenuItem>
+              <MenuItem key={settings[1]}>
+                <Typography
+                  textAlign="center"
+                  onClick={
+                    () => {
+                      alert('Fazendo logout...');
+                      setUserData({ ...userData, username: '', link: '' });
+                      setAnchorElUser(null);
+                    }}
+                >
+                  {settings[1]}
+                </Typography>
+              </MenuItem>
             </Menu>
+
+
+            {/* MODAL - Login */}
+            <>
+              <Modal
+                keepMounted
+                open={open}
+                onClick={() => {
+                  setAnchorElUser(document.getElementById('App'))
+                }}
+                onClose={() => {
+                  setAnchorElUser(null)
+                }}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box
+                  component="form"
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 400,
+                    bgcolor: 'background.paper',
+                    boxShadow: 24,
+                    p: 4,
+                    m: 1,
+                  }}
+                >
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h6"
+                    component="h2"
+                    textAlign='center'
+                  >
+                    Por favor, informe seu usuário do GitHub:
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginTop: 3
+                    }}
+                  >
+                    <TextField
+                      fullWidth
+                      required
+                      value={name}
+                      onChange={(event) => { setName(event.target.value) }}
+                      id="filled-required"
+                      label="Required"
+                      placeholder="Username"
+                      variant="filled"
+                    />
+                  </Box>
+                  <Stack
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginTop: 3
+                    }}
+                    spacing={2}
+                    direction="row"
+                  >
+                    <Button
+                      variant="contained"
+                      onClick={
+                        () => {
+                          handleClick(name);
+                          setOpen(false);
+                        }}
+                    > OK
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={
+                        () => setOpen(false)
+                      }
+                    > Cancel
+                    </Button>
+                  </Stack>
+                </Box>
+              </Modal>
+            </>
           </Box>
         </Toolbar>
       </Container>

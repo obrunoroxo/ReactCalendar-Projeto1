@@ -1,16 +1,14 @@
-import './App.css';
 import * as React from 'react';
-import ResponsiveAppBar from './components/appBar';
-import StaticDatePickerLandscape from './components/calendar';
-// import gitHubUser from './components/loginReq';
-
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { ColorModeContext } from './components/context/checkContext';
 import { useState,  useMemo} from 'react';
 import { CssBaseline } from '@mui/material';
 
-function App() {
+import './App.css';
+import ResponsiveAppBar from './components/appBar';
+import StaticDatePickerLandscape from './components/calendar';
 
+function App() {
   const [mode, setMode] = useState('light');
 
   const colorMode = useMemo(
