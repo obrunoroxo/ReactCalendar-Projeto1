@@ -39,6 +39,7 @@ function ResponsiveAppBar() {
 
   async function handleClick(name) {
     const response = await getGitUser(name);
+    // criar condicao para caso a requisicao na api do git apresentar erro.
     setUserData({ ...userData, username: response['username'], link: response['link'] })
   }
 
@@ -58,9 +59,7 @@ function ResponsiveAppBar() {
             href="/"
             sx={{
               mr: 2,
-              display: {
-                xs: 'none', md: 'flex'
-              },
+              display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
@@ -72,29 +71,29 @@ function ResponsiveAppBar() {
           </Typography>
           <Box sx={{
             flexGrow: 1,
-            display: {
-              xs: 'flex', md: 'none'
-            }
+            display: { xs: 'flex', md: 'none' }
           }}
           >
             <IconButton
               size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={(event) => { setAnchorElNav(event.currentTarget); }}
               color="inherit"
+              aria-haspopup="true"
+              aria-controls="menu-appbar"
+              aria-label="account of current user"
+              onClick={(event) => {
+                setAnchorElNav(event.currentTarget);
+              }}
             >
               <MenuIcon />
             </IconButton>
             <Menu
+              keepMounted
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'left',
               }}
-              keepMounted
               transformOrigin={{
                 vertical: 'top',
                 horizontal: 'left',
@@ -241,22 +240,22 @@ function ResponsiveAppBar() {
               </IconButton>
             </Tooltip>
             <Menu
+              id="menu-appbar"
+              keepMounted
+              anchorEl={anchorElUser}
+              open={Boolean(anchorElUser)}
               sx={{
                 mt: '45px',
                 display: 'flex'
               }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
               anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
               }}
-              keepMounted
               transformOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
               }}
-              open={Boolean(anchorElUser)}
               onClose={() => {
                 setAnchorElUser(null);
               }}
@@ -264,9 +263,7 @@ function ResponsiveAppBar() {
               <MenuItem key={settings[0]}>
                 <Typography
                   textAlign="center"
-                  onClick={
-                    () => setOpen(true)
-                  }
+                  onClick={() => setOpen(true)}
                 >
                   {settings[0]}
                 </Typography>
@@ -274,12 +271,11 @@ function ResponsiveAppBar() {
               <MenuItem key={settings[1]}>
                 <Typography
                   textAlign="center"
-                  onClick={
-                    () => {
-                      alert('Fazendo logout...');
-                      setUserData({ ...userData, username: '', link: '' });
-                      setAnchorElUser(null);
-                    }}
+                  onClick={() => {
+                    alert('Fazendo logout...');
+                    setUserData({ ...userData, username: '', link: '' });
+                    setAnchorElUser(null);
+                  }}
                 >
                   {settings[1]}
                 </Typography>
@@ -292,72 +288,71 @@ function ResponsiveAppBar() {
               <Modal
                 keepMounted
                 open={open}
-                onClick={() => {
-                  setAnchorElUser(document.getElementById('App'))
-                }}
-                onClose={() => {
-                  setAnchorElUser(null)
-                }}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
+                onClose={() => {
+                  setAnchorElUser(null);
+                }}
+                onClick={() => {
+                  setAnchorElUser(document.getElementById('App'));
+                }}
               >
                 <Box
                   component="form"
                   sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 400,
-                    bgcolor: 'background.paper',
-                    boxShadow: 24,
-                    p: 4,
                     m: 1,
+                    p: 4,
+                    top: '50%',
+                    width: 400,
+                    left: '50%',
+                    boxShadow: 24,
+                    position: 'absolute',
+                    bgcolor: 'background.paper',
+                    transform: 'translate(-50%, -50%)',
                   }}
                 >
                   <Typography
-                    id="modal-modal-title"
                     variant="h6"
                     component="h2"
                     textAlign='center'
+                    id="modal-modal-title"
                   >
                     Por favor, informe seu usuário do GitHub:
                   </Typography>
 
                   <Box
                     sx={{
+                      marginTop: 3,
                       display: 'flex',
-                      justifyContent: 'center',
-                      marginTop: 3
+                      justifyContent: 'center'
                     }}
                   >
                     <TextField
                       fullWidth
                       required
                       value={name}
-                      onChange={(event) => { setName(event.target.value) }}
-                      id="filled-required"
                       label="Required"
-                      placeholder="Username"
                       variant="filled"
+                      id="filled-required"
+                      placeholder="Username"
+                      onChange={(event) => { setName(event.target.value) }}
                     />
                   </Box>
                   <Stack
                     sx={{
+                      marginTop: 3,
                       display: 'flex',
-                      justifyContent: 'center',
-                      marginTop: 3
+                      justifyContent: 'center'
                     }}
                     spacing={2}
                     direction="row"
                   >
                     <Button
                       variant="contained"
-                      onClick={
-                        () => {
-                          handleClick(name);
-                          setOpen(false);
-                        }}
+                      onClick={() => {
+                        handleClick(name);
+                        setOpen(false);
+                      }}
                     > OK
                     </Button>
                     <Button
@@ -376,5 +371,6 @@ function ResponsiveAppBar() {
       </Container>
     </AppBar >
   );
-}
+};
+
 export default ResponsiveAppBar;
