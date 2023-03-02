@@ -39,8 +39,7 @@ function ResponsiveAppBar() {
 
   async function handleClick(name) {
     const response = await getGitUser(name);
-    // criar condicao para caso a requisicao na api do git apresentar erro.
-    setUserData({ ...userData, username: response['username'], link: response['link'] })
+    setUserData(response !== 404 ? { ...userData, username: response['username'], link: response['link'] } : { userData })
   }
 
 
