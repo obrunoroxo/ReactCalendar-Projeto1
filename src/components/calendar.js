@@ -6,7 +6,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 import dayjs from 'dayjs';
-import './calendarStyles.css'
+import './calendarStyles.css';
+import { getAllAPIDatas } from './reqsAPI/reqAllDatasApi';
+import { verifyDateInDatas } from './reqsAPI/verifyDateInDatas';
 
 
 const isWeekend = (date) => {
@@ -17,6 +19,13 @@ const isWeekend = (date) => {
 
 function StaticDatePickerLandscape() {
   const [value, setValue] = React.useState(dayjs());
+
+
+  async function handleClick(date) {
+    const response = await getAllAPIDatas();
+    verifyDateInDatas(response, date)
+  }
+
 
   return (
     <Box
@@ -44,6 +53,7 @@ function StaticDatePickerLandscape() {
           }}
           onAccept={() => {
             console.log('OK clicked, selected date:', value.format('DD/MM/YYYY'));
+            handleClick(value.format('DD-MM-YYYY'))
           }}
           componentsProps={{
             actionBar: {
