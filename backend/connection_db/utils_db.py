@@ -4,7 +4,7 @@ import logging
 
 def openConnectionDB():
     try:
-        connection = sqlite3.connect(r'.\connection_db\bancoagenda')
+        connection = sqlite3.connect('./connection_db/bancoagenda')
         cursor = connection.cursor()
 
         return connection, cursor

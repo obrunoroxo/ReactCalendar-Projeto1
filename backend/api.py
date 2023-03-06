@@ -18,6 +18,7 @@ from connection_db.utils_db import (
 app = Flask(__name__)
 CORS(app)
 
+
 # Consulta todos os dados do banco de dados.
 @app.route('/api/datas', methods=['GET'])
 def get_all_datas():
@@ -159,4 +160,4 @@ def get_appointment_datas():
     )
 
 
-app.run(port='5000', host='localhost', debug=True)
+app.run(port='5000', host='0.0.0.0')

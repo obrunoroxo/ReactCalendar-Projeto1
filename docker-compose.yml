@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  api:
+    container_name: reactcalendar-projeto1-api
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: reactcalendar-api
+    ports:
+      - "5000:5000"
+    restart: always
+  front:
+    container_name: reactcalendar-projeto1-front
+    build:
+      context: .
+      dockerfile: Dockerfile.front
+    image: reactcalendar-front
+    ports:
+      - "3000:3000"
+    restart: always
