@@ -12,7 +12,7 @@ export async function getGitUser(user) {
     alert(error)
     const error404 = error['response']['status'];
 
-    return error404
+    return error404;
 
-  }
+  };
 };
