@@ -157,20 +157,30 @@ export default function ConsultSchedule() {
             transform: "translate(-50%, -50%)",
           }}
         >
-          <Stack direction="column" spacing={1} alignItems="center">
+          <Stack direction="column" spacing={1} marginTop={2} alignItems="center">
+            <Typography
+              variant="h6"
+              component="h2"
+              textAlign="center"
+              marginTop={2}
+              id="modal-modal-title"
+            >
+              Olá, Pessoa! Segue seus agendamentos:
+            </Typography>
             <Chip
               sx={{
+                marginTop: 2,
                 fontSize: 16,
                 position: "relative",
                 padding: "0 10px 0 5px",
               }}
               // centralizar o elemento
-              label={`${dayjs(date).format("DD/MM/YYYY")} | ${
-                userData.horario
-              }`}
+              label={`${dayjs(date).format("DD/MM/YYYY")} | ${userData.horario
+                }`}
               variant="outlined"
             />
             <Button
+              marginTop={2}
               onClick={() => {
                 setOpenModalDatas(false);
               }}
