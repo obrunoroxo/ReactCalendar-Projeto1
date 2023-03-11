@@ -7,32 +7,52 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 import { ModalContext } from "../context/ModalContext";
 import { getAllAPIDatas } from "../reqsAPI/reqAllDatasApi";
-
 
 export default function ConsultSchedule() {
   const { open1, setOpen1 } = React.useContext(ModalContext);
   const [clientcpf, setClientCPF] = React.useState("");
   const [openModalDatas, setOpenModalDatas] = React.useState(false);
-  const [userData, setUserData] = React.useState({ data: "", idhora: "", tipoHora: "" });
+  const [userData, setUserData] = React.useState({
+    data: "",
+    idHora: "",
+    tipoHora: "",
+    horario: "",
+  });
 
   async function handleClick(cpf) {
     const response = await getAllAPIDatas();
-    const schedule = response['schedule'];
-    const datas = schedule.find(data => data['cpf'] === cpf);
+    const schedule = await response["schedule"];
+    const datas = schedule.find((data) => data["cpf"] === cpf);
+    // console.log(datas)
+    const appointments = await response["appointment"];
 
-    return (
-      setUserData({
-        ...userData,
-        idhora: datas['idHora'],
-        data: datas['data'],
-        tipoHora: datas['tipoHora']
-      })
-    )
+    let valueAppoint;
+
+    for (
+      let appointment = 0;
+      appointment < appointments.length;
+      appointment++
+    ) {
+      if (appointments[appointment]["idHora"] === userData.idHora) {
+        valueAppoint = `Hora: ${appointments[appointment]["horario"]}`;
+        break;
+      }
+    }
+
+    return setUserData({
+      ...userData,
+      idHora: datas["idHora"],
+      data: datas["data"],
+      tipoHora: datas["tipoHora"],
+      horario: valueAppoint,
+    });
   }
+
+  const date = dayjs(userData.data, "DD-MM-YYYY").toDate();
 
   return (
     <>
@@ -100,7 +120,8 @@ export default function ConsultSchedule() {
                 handleClick(clientcpf);
                 setOpenModalDatas(true);
                 setOpen1(false);
-              }}>
+              }}
+            >
               OK
             </Button>
             <Button
@@ -116,12 +137,15 @@ export default function ConsultSchedule() {
       </Modal>
       <Modal
         keepMounted
+        open={openModalDatas}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        open={openModalDatas}
       >
         <Box
           sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             m: 1,
             p: 4,
             top: "50%",
@@ -133,17 +157,27 @@ export default function ConsultSchedule() {
             transform: "translate(-50%, -50%)",
           }}
         >
-          <Stack direction="rows" spacing={1}>
+          <Stack direction="column" spacing={1} alignItems="center">
             <Chip
+              sx={{
+                fontSize: 16,
+                position: "relative",
+                padding: "0 10px 0 5px",
+              }}
               // centralizar o elemento
-              label={`${dayjs(userData.data).format('DD/MM/YYYY')} | ${userData.tipoHora} | ${userData.idhora}`}
+              label={`${dayjs(date).format("DD/MM/YYYY")} | ${
+                userData.horario
+              }`}
               variant="outlined"
             />
+            <Button
+              onClick={() => {
+                setOpenModalDatas(false);
+              }}
+            >
+              Cancel
+            </Button>
           </Stack>
-          <Button
-            onClick={() => setOpenModalDatas(false)}
-          > Cancel
-          </Button>
         </Box>
       </Modal>
     </>
