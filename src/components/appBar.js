@@ -352,14 +352,12 @@ function ResponsiveAppBar() {
                           setOpen(false);
                         }}
                       >
-                        {" "}
                         OK
                       </Button>
                       <Button
                         variant="contained"
                         onClick={() => setOpen(false)}
                       >
-                        {" "}
                         Cancel
                       </Button>
                     </Stack>
